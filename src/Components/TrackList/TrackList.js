@@ -4,7 +4,9 @@ import './TrackList.css';
 
 export class TrackList extends React.Component {
   render() {
-    let tracksArray = this.props.tracks.map(track => {return <Track key={track.id} track={track} />});
+    let tracksArray = this.props.tracks.map(track => {
+      return <Track key={track.id} track={track} onAdd={this.props.onAdd} isRemoval={this.props.isRemoval}/>
+    });
     // let track1 = <Track track={this.props.tracks[0]} />;
 
     return (
