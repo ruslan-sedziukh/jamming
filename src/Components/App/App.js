@@ -18,9 +18,25 @@ class App extends React.Component {
       ]
      };
     // this.state = { searchResults: [1, 5] };
+
+    this.addTrack = this.addTrack.bind(this);
+  }
+
+  addTrack(track){
+    let newPlaylistTracks = this.state.playlistTracks;
+
+    let trackIn = this.state.playlistTracks.findIndex(trackInPlaylist => {
+      return track.id === trackInPlaylist.id;
+    });
+
+    if(trackIn === -1) {
+      newPlaylistTracks.push(track);
+      this.setState( { playlistTracks: newPlaylistTracks} );
+    }
   }
 
   render() {
+
     return (
       <div>
         <h1>Ja<span className="highlight">mmm</span>ing</h1>
