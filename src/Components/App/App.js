@@ -3,6 +3,7 @@ import { Playlist } from '../Playlist/Playlist';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { SearchResults } from '../SearchResults/SearchResults';
 import './App.css';
+import Spotify from '../../util/Spotify';
 
 class App extends React.Component {
   constructor(props) {
@@ -61,8 +62,15 @@ class App extends React.Component {
     return trackURIs;
   }
 
-  search(searchTerm) {
-    console.log(searchTerm);
+  async search(searchTerm) {
+    // console.log(searchTerm);
+    try {
+      let newSearchResults = await Spotify.search(searchTerm);
+      this.setState( { searchResults:  newSearchResults} );
+    }
+    catch (error) {
+      console.log(error);
+    }
   }
 
   render() {

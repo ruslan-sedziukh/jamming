@@ -25,8 +25,34 @@ let Spotify = {
     }
   },
 
-  search: function(){
+  search: async function(searchTerm){
+    try {
+      let responseArray = [];
 
+      let searchResponse = await fetch(`https://api.spotify.com/v1/search?type=track&q=${searchTerm}`, {
+        headers: {Authorization: `Bearer ${accessToken}`}
+      });
+      if(searchResponse.ok){
+        let responseJSON = searchResponse.json();
+        for (let item in responseJSON.items){
+          let track = { 
+            id: item.id, 
+            name: item.name, 
+            artist: item.artists[0].name, 
+            album: item.album.name, 
+            uri: item.uri
+          };
+
+          responseArray.push(track);          
+        }
+
+      }
+  
+      return responseArray;
+    }
+    catch(error) {
+      console.log(error);
+    }
   }
 };
 
