@@ -67,6 +67,7 @@ class App extends React.Component {
     try {
       let newSearchResults = await Spotify.search(searchTerm);
       this.setState( { searchResults:  newSearchResults} );
+      console.log('newSearchResults: ' + newSearchResults);
     }
     catch (error) {
       console.log(error);
@@ -74,6 +75,8 @@ class App extends React.Component {
   }
 
   render() {
+    Spotify.getAccessToken();
+
     return (
       <div>
         <h1>Ja<span className="highlight">mmm</span>ing</h1>
