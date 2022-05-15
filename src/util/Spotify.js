@@ -84,15 +84,53 @@ const Spotify = {
   savePlaylist: async function (playlistName, trackURIs) {
     if(playlistName && trackURIs){
       let token = accessToken;
-      let headers = { Authorization: `Bearer ${token}` };
+      let headers = { Authorization: `Bearer ${token}` }; 
       let userID;
 
+      // ## Task 1 - Get userID
       try {
-        let searchResponse = await fetch('https://api.spotify.com/v1/me', {headers: headers});
+        let userRepsonse = await fetch('https://api.spotify.com/v1/me', {headers: headers});
 
-        if(searchResponse.ok) {
-          let responseJSON = searchResponse.json();
-          userID = responseJSON.id;
+        if(userRepsonse.ok) {
+          console.log('--------->>>> Got userID <<<<<---------');
+
+          let userRepsonseJSON = await userRepsonse.json();
+          userID = userRepsonseJSON.id; // need to check this object structure to get id in right way
+
+          // ## Task 2 - Post new playlist 
+          try {
+            let createPlaylistResponse = await fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {
+              headers: headers,
+              method: 'POST',
+              body: JSON.stringify({ name: playlistName }) 
+            });
+
+            if(createPlaylistResponse.ok) {
+              let createPlaylistResponseJSON = await createPlaylistResponse.json();
+              let playlistID = createPlaylistResponseJSON.id; // here should be ID to make another post of track URI`s
+
+              // ## Task 3 - Post tracks URI to playlist
+              try {
+                let postTrackURIsResponse = await fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks`, {
+                  headers: headers,
+                  method: 'POST',
+                  body: JSON.stringify({ uris: trackURIs })
+                });
+                
+                if(postTrackURIsResponse.ok) {
+                  console.log('>>>>> Playlist is added <<<<<');
+                  // return 'ok';
+                }
+    
+              }
+              catch(error) {
+                console.log(error);
+              }
+            }
+          }
+          catch(error) {
+            console.log(error);
+          }
         }
       }
       catch(error) {
